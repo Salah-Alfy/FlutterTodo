@@ -64,7 +64,7 @@ class HomeView extends GetView<HomeController> {
                 if (controller.tasks.isNotEmpty) {
                   Get.to(() => AddDialog(), transition: Transition.downToUp);
                 } else {
-                  EasyLoading.showInfo("Please create yourntask type");
+                  EasyLoading.showInfo("Please create your task type");
                 }
               },
               backgroundColor: controller.deleting.value ? Colors.red : blue,

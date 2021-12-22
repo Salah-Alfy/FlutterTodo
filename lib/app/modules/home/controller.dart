@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_overrides
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:todos/app/data/models/task.dart';
 import 'package:todos/app/data/services/storage/task_repository.dart';
@@ -16,6 +17,8 @@ class HomeController extends GetxController {
   final deleting = false.obs;
   final tasks = <Task>[].obs;
   final choosenTask = Rx<Task?>(null);
+  final doingTodos = <dynamic>[].obs;
+  final doneTodos = <dynamic>[].obs;
 
   @override
   void onInit() {
@@ -74,5 +77,75 @@ class HomeController extends GetxController {
 
   bool containTodo(List todos, String title) {
     return todos.any((element) => element["title"] == title);
+  }
+
+  void changeTodos(List<dynamic> select) {
+    doingTodos.clear();
+    doneTodos.clear();
+    for (var i = 0; i < select.length; i++) {
+      var todo = select[i];
+      var status = todo["done"];
+      if (status == true) {
+        doneTodos.add(todo);
+      } else {
+        doingTodos.add(todo);
+      }
+    }
+  }
+
+  bool addTodo(String title) {
+    var doingtodo = {"title": title, "done": false};
+    if (doingTodos
+        .any((element) => mapEquals<String, dynamic>(doingtodo, element))) {
+      return false;
+    }
+    var doneTodo = {"title": title, "done": true};
+    if (doneTodos
+        .any((element) => mapEquals<String, dynamic>(doneTodo, element))) {
+      return false;
+    }
+    doingTodos.add(doingtodo);
+    return true;
+  }
+
+  void updateTodos() {
+    var newTodos = <Map<String, dynamic>>[];
+    newTodos.addAll([...doingTodos, ...doneTodos]);
+    var newTask = choosenTask.value!.copyWith(todos: newTodos);
+    int oldIndex = tasks.indexOf(choosenTask.value);
+    tasks[oldIndex] = newTask;
+    tasks.refresh();
+  }
+
+  void doneTodo(String title) {
+    var doingTodo = {"title": title, "done": false};
+    int index = doingTodos.indexWhere(
+        (element) => mapEquals<String, dynamic>(doingTodo, element));
+    doingTodos.removeAt(index);
+    var doneTodo = {"title": title, "done": true};
+    doneTodos.add(doneTodo);
+    doingTodos.refresh();
+    doneTodos.refresh();
+  }
+
+  void deleteDoneTodo(dynamic doneTodo) {
+    int index = doneTodos
+        .indexWhere((element) => mapEquals<String, dynamic>(doneTodo, element));
+    doneTodos.removeAt(index);
+    doneTodos.refresh();
+  }
+
+  bool isTodosEmpty(Task task) {
+    return task.todos == null || task.todos!.isEmpty;
+  }
+
+  int getDoneTodo(Task task) {
+    var result = 0;
+    for (var i = 0; i < task.todos!.length; i++) {
+      if (task.todos![i]["done"] == true) {
+        result += 1;
+      }
+    }
+    return result;
   }
 }
