@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:todos/app/core/utils/extensions.dart';
-import 'package:todos/app/core/values/colors.dart';
 import 'package:todos/app/modules/home/controller.dart';
 
 class AddDialog extends StatelessWidget {
