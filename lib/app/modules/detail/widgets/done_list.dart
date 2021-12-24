@@ -12,6 +12,7 @@ class DoneList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => controller.doneTodos.isNotEmpty
         ? ListView(
+          scrollDirection: Axis.vertical,
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
             children: [

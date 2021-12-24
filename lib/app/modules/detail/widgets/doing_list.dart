@@ -13,11 +13,14 @@ class DoingList extends StatelessWidget {
         () => controller.doingTodos.isEmpty && controller.doneTodos.isEmpty
             ? Column(
                 children: [
-                  Image.asset(
-                    "images/task.png",
-                    fit: BoxFit.contain,
-                    height: 65.0.wp,
-                    width: 65.0.wp,
+                  Padding(
+                    padding:  EdgeInsets.all(8.0.wp),
+                    child: Image.asset(
+                      "assets/images/task.png",
+                      fit: BoxFit.contain,
+                      height: 65.0.wp,
+                      width: 65.0.wp,
+                    ),
                   ),
                   Text(
                     "Add Task",
@@ -29,6 +32,7 @@ class DoingList extends StatelessWidget {
                 ],
               )
             : ListView(
+              scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 children: [
